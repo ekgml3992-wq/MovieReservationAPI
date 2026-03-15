@@ -1,0 +1,194 @@
+{
+  "info": {
+    "_postman_id": "fc9775c3-86c2-440f-93fc-80553e5ef245",
+    "name": "MovieReservationAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53067153",
+    "_collection_link": "https://go.postman.co/collection/53067153-fc9775c3-86c2-440f-93fc-80553e5ef245?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Movies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Movies list is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.length).to.be.above(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Showtimes",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Showtimes list exists\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"array\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/movies/1/showtimes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies",
+            "1",
+            "showtimes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Seats",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Seats returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"array\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/showtimes/1/seats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "showtimes",
+            "1",
+            "seats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reserve Seat",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Reservation successful\", function () {\r",
+              "    pm.expect([200,201]).to.include(pm.response.code);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/reserve/1/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reserve",
+            "1",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reserve Seat Duplicate",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Duplicate reservation blocked\", function () {\r",
+              "    pm.expect([400,409]).to.include(pm.response.code);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/reserve/1/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reserve",
+            "1",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
