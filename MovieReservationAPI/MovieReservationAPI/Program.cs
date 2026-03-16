@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer(); 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -11,142 +11,215 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// øµ»≠ µ•¿Ã≈Õ
 List<Movie> movies = new()
+{
+    new Movie
     {
-        new Movie 
-        { 
-            Id = 1, 
-            Title = "¿Œ≈ÕΩ∫≈⁄∂Û", 
-            ShowTimes = new List<ShowTime> 
-            { 
-                new ShowTime 
-                {
-                    Id = 1, 
-                    Time = "10:00", 
-                    Seats = CreateSeats() 
-                }, 
-                new ShowTime 
-                { 
-                    Id = 2, 
-                    Time = "14:00", 
-                    Seats = CreateSeats() 
-                } 
-            } 
-        },
-        new Movie 
-        { 
-            Id = 2, 
-            Title = "¿Œº¡º«", 
-            ShowTimes = new List<ShowTime> 
-            { 
-                new ShowTime 
-                { 
-                    Id = 3, 
-                    Time = "12:00", 
-                    Seats = CreateSeats() 
-                }, 
-                new ShowTime 
-                { 
-                    Id = 4, 
-                    Time = "18:00", 
-                    Seats = CreateSeats()
-                } 
-            } 
-        } 
+        Id = 1,
+        Title = "Ìò∏ÌçºÏä§",
+        ShowTimes = new List<ShowTime>
+        {
+            new ShowTime
+            {
+                Id = 1,
+                Time = "10:00",
+                Seats = CreateSeats()
+            },
+            new ShowTime
+            {
+                Id = 2,
+                Time = "14:00",
+                Seats = CreateSeats()
+            }
+        }
+    },
+    new Movie
+    {
+        Id = 2,
+        Title = "ÏÇºÏïÖÎèÑ",
+        ShowTimes = new List<ShowTime>
+        {
+            new ShowTime
+            {
+                Id = 3,
+                Time = "12:00",
+                Seats = CreateSeats()
+            },
+            new ShowTime
+            {
+                Id = 4,
+                Time = "18:00",
+                Seats = CreateSeats()
+            }
+        }
+    }
 };
 
-
-// øµ»≠ ∏Ò∑œ ¡∂»∏
-app.MapGet("/movies", () => 
-{ 
-    return movies; 
-}); 
-
-
-// øµ»≠ ªÛøµΩ√∞£ ¡∂»∏
-app.MapGet("/movies/{movieId}/showtimes", (int movieId) => 
-{ 
-    var movie = movies.FirstOrDefault(m => m.Id == movieId); 
-    if (movie == null) return Results.NotFound("øµ»≠∏¶ √£¿ª ºˆ æ¯Ω¿¥œ¥Ÿ"); 
-    return Results.Ok(movie.ShowTimes); 
-});
-
-
-// ¡¬ºÆ ¡∂»∏
-app.MapGet("/showtimes/{showtimeId}/seats", (int showtimeId) => 
+app.MapGet("/movies", () =>
 {
-    var showtime = movies 
-    .SelectMany(m => m.ShowTimes) 
-    .FirstOrDefault(s => s.Id == showtimeId); 
-    
-    if (showtime == null) 
-        return Results.NotFound("ªÛøµΩ√∞£ æ¯¿Ω"); 
-    
-    return Results.Ok(showtime.Seats); 
+    return movies;
 });
 
+app.MapGet("/movies/{movieId}/showtimes", (int movieId) =>
+{
+    var movie = movies.FirstOrDefault(m => m.Id == movieId);
 
-// ¡¬ºÆ øπæ‡
-app.MapPost("/reserve/{showtimeId}/{seatId}", (int showtimeId, int seatId) => 
-{ 
-    var showtime = movies 
-    .SelectMany(m => m.ShowTimes) 
-    .FirstOrDefault(s => s.Id == showtimeId); 
-    
-    if (showtime == null) 
-        return Results.NotFound("ªÛøµΩ√∞£ æ¯¿Ω"); 
-    
-    var seat = showtime.Seats.FirstOrDefault(s => s.Id == seatId); 
-    
-    if (seat == null) 
-        return Results.NotFound("¡¬ºÆ æ¯¿Ω"); 
-    
-    if (seat.IsReserved) 
-        return Results.BadRequest("¿ÃπÃ øπæ‡µ» ¡¬ºÆ"); 
-    
-    seat.IsReserved = true; 
-    
-    return Results.Ok("øπæ‡ øœ∑·");
-}); 
+    if (movie == null)
+        return Results.NotFound("ÏòÅÌôîÎ•º Ï∞æÏùÑ Ïàò ÏóÜÏäµÎãàÎã§");
+
+    return Results.Ok(movie.ShowTimes);
+});
+
+app.MapGet("/showtimes/{showtimeId}/seats", (int showtimeId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    return Results.Ok(showtime.Seats);
+});
+
+app.MapPost("/reserve/{showtimeId}/{seatId}", (int showtimeId, int seatId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    var seat = showtime.Seats.FirstOrDefault(s => s.Id == seatId);
+
+    if (seat == null)
+        return Results.NotFound("Ï¢åÏÑù ÏóÜÏùå");
+
+    if (seat.IsReserved)
+        return Results.BadRequest("Ïù¥ÎØ∏ ÏòàÏïΩÎêú Ï¢åÏÑù");
+
+    seat.IsReserved = true;
+
+    return Results.Ok("ÏòàÏïΩ ÏôÑÎ£å");
+});
+
+app.MapPost("/cancel/{showtimeId}/{seatId}", (int showtimeId, int seatId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    var seat = showtime.Seats.FirstOrDefault(s => s.Id == seatId);
+
+    if (seat == null)
+        return Results.NotFound("Ï¢åÏÑù ÏóÜÏùå");
+
+    if (!seat.IsReserved)
+        return Results.BadRequest("ÏòàÏïΩÎêòÏßÄ ÏïäÏùÄ Ï¢åÏÑù");
+
+    seat.IsReserved = false;
+
+    return Results.Ok("ÏòàÏïΩ Ï∑®ÏÜå ÏôÑÎ£å");
+});
+
+app.MapGet("/showtimes/{showtimeId}/available-seats", (int showtimeId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    var availableSeats = showtime.Seats
+        .Where(s => !s.IsReserved)
+        .ToList();
+
+    return Results.Ok(availableSeats);
+});
+
+app.MapGet("/showtimes/{showtimeId}/reserved-seats", (int showtimeId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    var reservedSeats = showtime.Seats
+        .Where(s => s.IsReserved)
+        .ToList();
+
+    return Results.Ok(reservedSeats);
+});
+
+app.MapGet("/showtimes/{showtimeId}/available-seat-count", (int showtimeId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    var availableSeatCount = showtime.Seats.Count(s => !s.IsReserved);
+
+    return Results.Ok(availableSeatCount);
+});
+
+app.MapGet("/showtimes/{showtimeId}/reserved-seat-count", (int showtimeId) =>
+{
+    var showtime = movies
+        .SelectMany(m => m.ShowTimes)
+        .FirstOrDefault(s => s.Id == showtimeId);
+
+    if (showtime == null)
+        return Results.NotFound("ÏÉÅÏòÅÏãúÍ∞Ñ ÏóÜÏùå");
+
+    var reservedSeatCount = showtime.Seats.Count(s => s.IsReserved);
+
+    return Results.Ok(reservedSeatCount);
+});
 
 app.Run();
 
+List<Seat> CreateSeats()
+{
+    var seats = new List<Seat>();
 
-// ¡¬ºÆ ª˝º∫
-List<Seat> CreateSeats() 
-{ 
-    var seats = new List<Seat>(); 
-    
-    for (int i = 1; i <= 10; i++) 
-    { 
-        seats.Add(new Seat 
-        { 
-            Id = i, IsReserved = false
-        }); 
-    } 
-    
-    return seats; 
+    for (int i = 1; i <= 10; i++)
+    {
+        seats.Add(new Seat
+        {
+            Id = i,
+            IsReserved = false
+        });
+    }
+
+    return seats;
 }
 
+class Movie
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public List<ShowTime> ShowTimes { get; set; }
+}
 
-// ∏µ®
-class Movie 
-{ 
-    public int Id { get; set; } 
-    public string Title { get; set; } 
-    public List<ShowTime> ShowTimes { get; set; } 
-} 
+class ShowTime
+{
+    public int Id { get; set; }
+    public string Time { get; set; }
+    public List<Seat> Seats { get; set; }
+}
 
-class ShowTime 
-{ 
-    public int Id { get; set; } 
-    public string Time { get; set; } 
-    public List<Seat> Seats { get; set; } 
-} 
-
-class Seat 
-{ 
+class Seat
+{
     public int Id { get; set; }
     public bool IsReserved { get; set; }
 }
