@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,6 +26,7 @@ namespace MovieReservationAPI
         public List<ShowTime> ShowTimes(int movieId)
         {
             var movie = _movies.FirstOrDefault(m => m.Id == movieId);
+
             if (movie == null)
                 throw new InvalidOperationException("영화를 찾을 수 없습니다");
 
@@ -64,6 +65,66 @@ namespace MovieReservationAPI
             seat.IsReserved = true;
 
             return "예약 완료";
+        }
+
+        public string CancelReservation(int showtimeId, int seatId)
+        {
+            var showtime = _movies
+                .SelectMany(m => m.ShowTimes)
+                .FirstOrDefault(s => s.Id == showtimeId);
+
+            if (showtime == null)
+                throw new InvalidOperationException("상영시간 없음");
+
+            var seat = showtime.Seats.FirstOrDefault(s => s.Id == seatId);
+
+            if (seat == null)
+                throw new InvalidOperationException("좌석 없음");
+
+            if (!seat.IsReserved)
+                throw new InvalidOperationException("예약되지 않은 좌석");
+
+            seat.IsReserved = false;
+
+            return "예약 취소 완료";
+        }
+
+        public List<Seat> AvailableSeats(int showtimeId)
+        {
+            var showtime = _movies
+                .SelectMany(m => m.ShowTimes)
+                .FirstOrDefault(s => s.Id == showtimeId);
+
+            if (showtime == null)
+                throw new InvalidOperationException("상영시간 없음");
+
+            return showtime.Seats
+                .Where(s => !s.IsReserved)
+                .ToList();
+        }
+
+        public List<Seat> ReservedSeats(int showtimeId)
+        {
+            var showtime = _movies
+                .SelectMany(m => m.ShowTimes)
+                .FirstOrDefault(s => s.Id == showtimeId);
+
+            if (showtime == null)
+                throw new InvalidOperationException("상영시간 없음");
+
+            return showtime.Seats
+                .Where(s => s.IsReserved)
+                .ToList();
+        }
+
+        public int AvailableSeatCount(int showtimeId)
+        {
+            return AvailableSeats(showtimeId).Count;
+        }
+
+        public int ReservedSeatCount(int showtimeId)
+        {
+            return ReservedSeats(showtimeId).Count;
         }
 
         public static List<Movie> CreateDefaultMovies()
