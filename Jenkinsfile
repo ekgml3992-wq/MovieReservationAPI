@@ -91,7 +91,7 @@ post {
         mail to: 'ekgml3992@gmail.com',
              subject: "젠킨스 빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
              body: """
-Build failed.
+빌드 실패.
 
 Project: ${env.JOB_NAME}
 Build Number: ${env.BUILD_NUMBER}
@@ -105,7 +105,7 @@ ${env.BUILD_URL}
         mail to: 'ekgml3992@gmail.com',
              subject: "젠킨스 빌드 수정완료: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
              body: """
-The previously failing build has been fixed.
+오류가 수정되었습니다.
 
 Project: ${env.JOB_NAME}
 Build Number: ${env.BUILD_NUMBER}
