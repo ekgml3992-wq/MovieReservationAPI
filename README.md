@@ -142,7 +142,7 @@ API 서버를 컨테이너로 실행한 후 Newman을 통해 실제 HTTP 요청 
 
 ### Unit Test 실행 결과
 
-![test](MovieReservationAPI/images/Jenkins console output.JPG)
+![test](MovieReservationAPI/images/Jenkins%20console%20output.JPG)
 
 ---
 
