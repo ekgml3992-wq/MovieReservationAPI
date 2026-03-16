@@ -89,7 +89,7 @@ EOF
 post {
     failure {
         mail to: 'ekgml3992@gmail.com',
-             subject: "Jenkins Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+             subject: "젠킨스 빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
              body: """
 Build failed.
 
@@ -103,7 +103,7 @@ ${env.BUILD_URL}
 
     fixed {
         mail to: 'ekgml3992@gmail.com',
-             subject: "Jenkins Build Fixed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+             subject: "젠킨스 빌드 수정완료: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
              body: """
 The previously failing build has been fixed.
 
